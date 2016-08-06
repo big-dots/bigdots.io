@@ -1,0 +1,107 @@
+body {
+  font-family: Helvetica;
+  font-size: 16px;
+  font-weight: 100;
+}
+
+header {
+  width: 100%;
+  height: 60px;
+}
+ul.controls {
+  margin: 0;
+  padding: 0;
+  height: 40px;
+}
+ul.controls li {
+  margin: 0 10px;
+  padding: 0;
+  display: inline-block;
+  list-style-type: none;
+  vertical-align: middle;
+}
+ul.colors {
+  margin: 0;
+  padding: 0;
+  height: 40px;
+}
+ul.colors li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  width: 20px;
+  bottom: 0;
+  padding-top: 10px;
+  display: inline-block;
+}
+ul.colors li.selected {
+  padding-top: 0px;
+}
+ul.colors .color-selector {
+  width: 20px;
+  height: 20px;
+}
+ul.colors .selected .color-selector {
+  height: 30px;
+}
+#clear {
+  display: inline-block;
+  height: 30px;
+  line-height: 40px;
+}
+.frame {
+  width: 90vw;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+.matrix {
+  padding: 10px;
+  margin: 0;
+  background: #000;
+}
+.matrix-row {
+  text-align: center;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.matrix-dot-wrapper {
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display-meta {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.matrix-dot {
+  height: 60%;
+  width: 60%;
+  display: inline-block;
+  background: #444;
+  border-radius: 100px;
+}
+.graffiti-mode .display-dot:hover {
+  height: 90%;
+  width: 90%;
+  border: 1px solid #FFF;
+}
+
+#brightness {
+  margin-top: 13px;
+}
+.graffiti-related {
+  display: none;
+}
+.graffiti-mode .graffiti-related {
+  display: block;
+}
