@@ -1511,6 +1511,11 @@ var Resource = function () {
       return firebase.database().ref('displays/' + id);
     }
   }, {
+    key: 'displayConnectedHardware',
+    value: function displayConnectedHardware(id) {
+      return firebase.database().ref('displays/' + id + '/connectedHardware');
+    }
+  }, {
     key: 'hardwares',
     value: function hardwares() {
       return firebase.database().ref('hardware');
@@ -1580,7 +1585,72 @@ firebase.initializeApp({
 
 (0, _page2.default)();
 
-},{"./pages/display":14,"./pages/display-form":12,"./pages/display-list":13,"./pages/home":15,"page":1}],12:[function(require,module,exports){
+},{"./pages/display":15,"./pages/display-form":13,"./pages/display-list":14,"./pages/home":16,"page":1}],12:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _resource = require('../lib/resource');
+
+var _resource2 = _interopRequireDefault(_resource);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DisplayManager = function () {
+  function DisplayManager() {
+    _classCallCheck(this, DisplayManager);
+  }
+
+  _createClass(DisplayManager, [{
+    key: 'create',
+    value: function create(matrix, config, cb) {
+      var matrixKey = firebase.database().ref('matrices').push().key,
+          displayKey = firebase.database().ref('displays').push().key;
+
+      config.matrix = matrixKey;
+
+      new _resource2.default().matrix(matrixKey).set(matrix).then(function () {
+        new _resource2.default().display(displayKey).set(config).then(function () {
+          var _loop = function _loop(hardwareKey) {
+            var hardwareRef = new _resource2.default().hardware(hardwareKey);
+
+            hardwareRef.once('value').then(function (snapshot) {
+              var hardware = snapshot.val();
+
+              if (hardware.display) {
+                var ref = new _resource2.default().displayConnectedHardware(hardware.display);
+                var data = {};
+                data[hardwareKey] = null;
+                ref.update(data);
+              }
+
+              hardwareRef.update({ display: displayKey });
+
+              cb(displayKey);
+            });
+          };
+
+          for (var hardwareKey in config.connectedHardware) {
+            _loop(hardwareKey);
+          }
+        });
+      });
+    }
+  }]);
+
+  return DisplayManager;
+}();
+
+exports.default = DisplayManager;
+
+},{"../lib/resource":10}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1593,6 +1663,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _page = require('page');
 
 var _page2 = _interopRequireDefault(_page);
+
+var _displayManager = require('../managers/display-manager');
+
+var _displayManager2 = _interopRequireDefault(_displayManager);
 
 var _resource = require('../lib/resource');
 
@@ -1612,6 +1686,8 @@ var DisplayForm = function () {
   _createClass(DisplayForm, [{
     key: 'render',
     value: function render() {
+      var _this = this;
+
       this.$el.html('\n      <h1>\n        Create a Display\n      </h1>\n      <hr />\n      <div class="row">\n        <div class="col-xs-12 col-sm-6">\n          <form>\n            <fieldset class="form-group">\n              <label for="name">Display name</label>\n              <input type="text" class="form-control" id="display-name" placeholder="My cool display" />\n              <small class="text-muted">This will function as a label</small>\n            </fieldset>\n            <div class="row">\n              <div class="col-xs-12 col-sm-6">\n                <fieldset class="form-group">\n                  <label for="display-width">Select width</label>\n                  <select class="form-control" id="display-width" name="width">\n                    <option value="16">16</option>\n                    <option value="32">32</option>\n                    <option value="64">64</option>\n                  </select>\n                </fieldset>\n              </div>\n              <div class="col-xs-12 col-sm-6">\n                <fieldset class="form-group">\n                  <label for="display-height">Select height</label>\n                  <select class="form-control" id="display-height" name="height">\n                    <option value="16">16</option>\n                    <option value="32">32</option>\n                    <option value="64">64</option>\n                  </select>\n                </fieldset>\n              </div>\n              <div class="col-xs-12">\n                <fieldset class="form-group">\n                  <label for="connect-hardware">Connect Hardware</label>\n                  <select class="form-control" id="connect-hardware" name="connect-hardware" multiple="multiple">\n                  </select>\n                </fieldset>\n              </div>\n            </div>\n            <button type="submit" class="btn btn-success pull-right">Create Matrix</button>\n          </form>\n        </div>\n      </div>\n    ');
 
       this.populateHardwareOptions();
@@ -1621,31 +1697,21 @@ var DisplayForm = function () {
 
         var displayName = $('#display-name').val(),
             displayWidth = parseInt($('#display-width').val(), 10),
-            displayHeight = parseInt($('#display-height').val(), 10);
+            displayHeight = parseInt($('#display-height').val(), 10),
+            requestedHardware = _this.$el.find('select#connect-hardware').val();
 
-        var matrixData = {};
-        for (var y = 0; y < displayWidth; y++) {
-          for (var x = 0; x < displayWidth; x++) {
-            matrixData[y + ':' + x] = {
-              hex: '#000000',
-              updatedAt: Date.now()
-            };
-          }
-        }
+        var matrixData = assembleMartix(displayWidth, displayHeight),
+            connectedHardware = assembleHardware(requestedHardware);
 
-        var matrixKey = firebase.database().ref('matrices').push().key,
-            displayKey = firebase.database().ref('displays').push().key;
-
-        firebase.database().ref('matrices/' + matrixKey).set(matrixData);
-        firebase.database().ref('displays/' + displayKey).set({
-          matrix: matrixKey,
+        new _displayManager2.default().create(matrixData, {
           brightness: 100,
           name: displayName,
           width: displayWidth,
-          height: displayHeight
+          height: displayHeight,
+          connectedHardware: connectedHardware
+        }, function (displayKey) {
+          (0, _page2.default)('/displays/' + displayKey);
         });
-
-        (0, _page2.default)('/displays/' + displayKey);
       });
     }
   }, {
@@ -1657,8 +1723,10 @@ var DisplayForm = function () {
         var hardwares = snapshot.val();
 
         for (var key in hardwares) {
-          var size = hardwares[key].rows + 'x' + hardwares[key].columns * hardwares[key].chains;
-          $hardwareSelect.append('<option value=' + key + '>' + key + ' ' + size + '</option>');
+          var width = hardwares[key].rows,
+              height = hardwares[key].columns * hardwares[key].chains;
+
+          $hardwareSelect.append('<option value=' + key + '>' + key + ' ' + width + 'x' + height + '</option>');
         }
       });
     }
@@ -1667,9 +1735,33 @@ var DisplayForm = function () {
   return DisplayForm;
 }();
 
+function assembleHardware(hardwareKeys) {
+  var hardware = {};
+
+  hardwareKeys.forEach(function (key) {
+    hardware[key] = true;
+  });
+
+  return hardware;
+}
+
+function assembleMartix(width, height) {
+  var matrix = {};
+  for (var y = 0; y < height; y++) {
+    for (var x = 0; x < width; x++) {
+      matrix[y + ':' + x] = {
+        hex: '#000000',
+        updatedAt: Date.now()
+      };
+    }
+  }
+
+  return matrix;
+}
+
 exports.default = DisplayForm;
 
-},{"../lib/resource":10,"page":1}],13:[function(require,module,exports){
+},{"../lib/resource":10,"../managers/display-manager":12,"page":1}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1730,7 +1822,7 @@ var DisplayList = function () {
 
 exports.default = DisplayList;
 
-},{"../components/matrix":8,"../lib/resource":10}],14:[function(require,module,exports){
+},{"../components/matrix":8,"../lib/resource":10}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1815,7 +1907,7 @@ var Display = function () {
 
 exports.default = Display;
 
-},{"../components/connected-hardware":6,"../components/matrix":8,"../components/matrix-controls":7,"../lib/resource":10}],15:[function(require,module,exports){
+},{"../components/connected-hardware":6,"../components/matrix":8,"../components/matrix-controls":7,"../lib/resource":10}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

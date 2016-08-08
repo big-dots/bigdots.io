@@ -1,4 +1,5 @@
 import page from 'page';
+import DisplayManager from '../managers/display-manager';
 import Resource from '../lib/resource';
 
 class DisplayForm {
@@ -62,32 +63,21 @@ class DisplayForm {
 
       let displayName = $('#display-name').val(),
           displayWidth = parseInt($('#display-width').val(), 10),
-          displayHeight = parseInt($('#display-height').val(), 10);
+          displayHeight = parseInt($('#display-height').val(), 10),
+          requestedHardware = this.$el.find('select#connect-hardware').val();
 
+      var matrixData = assembleMartix(displayWidth, displayHeight),
+          connectedHardware = assembleHardware(requestedHardware);
 
-      var matrixData = {};
-      for(var y = 0; y < displayWidth; y++) {
-        for(var x = 0; x < displayWidth; x++) {
-          matrixData[`${y}:${x}`] = {
-            hex: '#000000',
-            updatedAt: Date.now()
-          };
-        }
-      }
-
-      var matrixKey = firebase.database().ref('matrices').push().key,
-          displayKey = firebase.database().ref('displays').push().key;
-
-      firebase.database().ref(`matrices/${matrixKey}`).set(matrixData);
-      firebase.database().ref(`displays/${displayKey}`).set({
-        matrix: matrixKey,
+      new DisplayManager().create(matrixData, {
         brightness: 100,
         name: displayName,
         width: displayWidth,
-        height: displayHeight
+        height: displayHeight,
+        connectedHardware: connectedHardware
+      }, function(displayKey) {
+        page(`/displays/${displayKey}`);
       });
-
-      page(`/displays/${displayKey}`);
     });
   }
 
@@ -98,11 +88,37 @@ class DisplayForm {
       var hardwares = snapshot.val();
 
       for(let key in hardwares) {
-        var size = `${hardwares[key].rows}x${hardwares[key].columns * hardwares[key].chains}`
-        $hardwareSelect.append(`<option value=${key}>${key} ${size}</option>`);
+        var width = hardwares[key].rows,
+            height = hardwares[key].columns * hardwares[key].chains;
+
+        $hardwareSelect.append(`<option value=${key}>${key} ${width}x${height}</option>`);
       }
     });
   }
+}
+
+function assembleHardware(hardwareKeys) {
+  var hardware = {};
+
+  hardwareKeys.forEach(function(key) {
+    hardware[key] = true;
+  });
+
+  return hardware;
+}
+
+function assembleMartix(width, height) {
+  var matrix = {};
+  for(var y = 0; y < height; y++) {
+    for(var x = 0; x < width; x++) {
+      matrix[`${y}:${x}`] = {
+        hex: '#000000',
+        updatedAt: Date.now()
+      };
+    }
+  }
+
+  return matrix;
 }
 
 export { DisplayForm as default }

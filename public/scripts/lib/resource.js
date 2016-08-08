@@ -15,6 +15,10 @@ class Resource {
     return firebase.database().ref(`displays/${id}`);
   }
 
+  displayConnectedHardware(id) {
+    return firebase.database().ref(`displays/${id}/connectedHardware`);
+  }
+
   hardwares() {
     return firebase.database().ref('hardware');
   }
