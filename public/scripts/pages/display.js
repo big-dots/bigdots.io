@@ -1,6 +1,6 @@
-import Matrix from '../components/matrix';
-import MatrixControls from '../components/matrix-controls';
+import SoftwareDisplay from '../components/software-display';
 import ConnectedHardware from '../components/connected-hardware';
+import EditDisplay from '../components/edit-display';
 import Resource from '../lib/resource';
 
 class Display {
@@ -12,37 +12,32 @@ class Display {
   render() {
     this.$el.html(`
       <div class="frame" style="display: none;">
-        <div class="matrix-controls"></div>
+      <div class="display-meta">
+        <div class="edit-display pull-right"></div>
+        <h4 class="display-name text-left"></h4>
+      </div>
         <div class='matrix'></div>
         <div class="display-meta">
           <div class="connected-hardware pull-right"></div>
-          <h4 class="display-name text-left"></h4>
         </div>
       </div>
     `);
 
-    var matrix = new Matrix(this.$el.find('.matrix'));
+    var softwareDisplay = new SoftwareDisplay(this.$el.find('.matrix'), this.id);
 
     var displayRef = new Resource().display(this.id);
     displayRef.on('value', (snapshot) => {
       var displayData = snapshot.val();
 
-      var matrixControls = new MatrixControls(this.$el.find('.matrix-controls'), displayData);
-      matrixControls.render();
-      matrixControls.attach({
-        onBrightnessChange: function(brightness) {
-          displayRef.update({brightness: parseInt(brightness, 10)});
-          matrix.refreshBrightness(brightness);
-        },
-        onColorChange: function(color) {
-          matrix.updateEditColor(color);
-        }
-      });
+      var dimensions = {
+        width: displayData.width,
+        height: displayData.height
+      };
 
-      matrix.load(displayData, $('.frame').width(), () => {
+      softwareDisplay.load($('.frame').width(), dimensions, () => {
         this.$el.find('.display-name').text(displayData.name);
+        this.$el.find('.display-mode').text(displayData.mode);
         this.$el.find('.frame').fadeIn();
-        matrix.attach();
       });
 
 
@@ -53,6 +48,9 @@ class Display {
 
       var connectedHardware = new ConnectedHardware(this.$el.find('.connected-hardware'), hardwareKeys);
       connectedHardware.render();
+
+      var editDisplay = new EditDisplay(this.$el.find('.edit-display'), this.id, displayData);
+      editDisplay.render();
     });
   }
 }

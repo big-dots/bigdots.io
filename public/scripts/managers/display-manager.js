@@ -1,11 +1,21 @@
 import Resource from '../lib/resource';
 
 class DisplayManager {
+  constructor(displayKey) {
+    this.displayKey = displayKey
+  }
+
   create(matrix, config, cb) {
     var matrixKey = firebase.database().ref('matrices').push().key,
         displayKey = firebase.database().ref('displays').push().key;
 
-    config.matrix = matrixKey;
+    debugger
+    config.mode = "programmable";
+    config.modes = {
+      programmable: {
+        matrix: matrixKey
+      }
+    };
 
     new Resource().matrix(matrixKey).set(matrix).then(function() {
       new Resource().display(displayKey).set(config).then(function() {
@@ -15,7 +25,7 @@ class DisplayManager {
 
           hardwareRef.once('value').then(function(snapshot) {
             let hardware = snapshot.val();
-            
+
             if(hardware.display) {
               var ref = new Resource().displayConnectedHardware(hardware.display);
               var data = {};
@@ -29,6 +39,18 @@ class DisplayManager {
           });
         }
       });
+    });
+  }
+
+  update(config, cb) {
+    new Resource().display(this.displayKey).update(config).then(function() {
+      cb();
+    });
+  }
+
+  updateModeConfig(mode, config, cb) {
+    new Resource().displayModeConfig(this.displayKey, mode).update(config).then(function() {
+      cb();
     });
   }
 }

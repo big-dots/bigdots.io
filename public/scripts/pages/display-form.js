@@ -29,6 +29,8 @@ class DisplayForm {
                     <option value="16">16</option>
                     <option value="32">32</option>
                     <option value="64">64</option>
+                    <option value="96">96</option>
+                    <option value="128">128</option>
                   </select>
                 </fieldset>
               </div>
@@ -39,6 +41,8 @@ class DisplayForm {
                     <option value="16">16</option>
                     <option value="32">32</option>
                     <option value="64">64</option>
+                    <option value="96">96</option>
+                    <option value="128">128</option>
                   </select>
                 </fieldset>
               </div>

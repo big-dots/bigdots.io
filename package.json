@@ -13,6 +13,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babelify": "^7.3.0",
     "page": "^1.7.1",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "display-coupler": "big-dots/display-coupler.git#v0.4.9"
   }
 }
