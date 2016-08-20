@@ -48,8 +48,8 @@ class DisplayManager {
     });
   }
 
-  updateModeConfig(mode, config, cb) {
-    new Resource().displayModeConfig(this.displayKey, mode).update(config).then(function() {
+  updateMacroConfig(macro, config, cb) {
+    new Resource().displayMacroConfig(this.displayKey, macro).update(config).then(function() {
       cb();
     });
   }

@@ -19,8 +19,8 @@ class Resource {
     return firebase.database().ref(`displays/${id}/connectedHardware`);
   }
 
-  displayModeConfig(id, mode) {
-    return firebase.database().ref(`displays/${id}/modes/${mode}`);
+  displayMacroConfig(id, mode) {
+    return firebase.database().ref(`displays/${id}/macros/${mode}`);
   }
 
   hardwares() {

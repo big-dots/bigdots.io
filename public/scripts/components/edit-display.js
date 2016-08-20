@@ -10,7 +10,7 @@ class EditDisplay {
   render() {
     this.$el.html(`
       <a href="#" class="btn btn-link" data-toggle="modal" data-target="#edit-display">
-        <span class="display-mode">${this.displayData.mode}</span>
+        <span class="display-macro">${this.displayData.activeMacro}</span>
         <i class="fa fa-pencil"></i>
       </a>
       <div id="edit-display" class="modal fade">
@@ -27,8 +27,8 @@ class EditDisplay {
                 <div class="row">
                   <div class="col-xs-12 col-sm-6">
                     <fieldset class="form-group">
-                      <label for="display-mode">Select mode</label>
-                      <select name="display-mode" class="form-control" id="display-mode">
+                      <label for="display-macro">Select macro</label>
+                      <select name="display-macro" class="form-control" id="display-macro">
                         <option value="programmable">Programmable</option>
                         <option value="twinkle">Twinkle</option>
                         <option value="solid-color">Solid color</option>
@@ -38,7 +38,7 @@ class EditDisplay {
                 </div>
                 <div class="programmable-options row" style="display: none;">
                   <div class="col-xs-12 col-sm-6">
-                    <p>Warning you need programming skills to use this display mode. Learn more about this option <a href="#">here.</a>
+                    <p>Warning you need programming skills to use this display macro. Learn more about this option <a href="#">here.</a>
                   </div>
                 </div>
                 <div class="twinkle-options row" style="display: none;">
@@ -76,7 +76,7 @@ class EditDisplay {
         $programmableOptions = this.$el.find('.programmable-options'),
         $solidColorOptions = this.$el.find('.solid-color-options');
 
-    this.$el.find('select#display-mode').change(function(el) {
+    this.$el.find('select#display-macro').change(function(el) {
       $twinkleOptions.hide();
       $programmableOptions.hide();
       $solidColorOptions.hide();
@@ -90,16 +90,15 @@ class EditDisplay {
       }
     });
 
-    this.$el.find('select#display-mode').val(this.displayData.mode).change();
+    this.$el.find('select#display-macro').val(this.displayData.activeMacro).change();
 
     this.$el.find('form').submit((ev) => {
       ev.preventDefault();
-      debugger
 
-      var mode = $('#display-mode').val();
+      var macro = $('#display-macro').val();
 
       function saveDisplay() {
-        var newData = { mode: mode };
+        var newData = { activeMacro: macro };
 
         new DisplayManager(this.displayKey).update(newData, (displayKey) => {
           this.$el.find('#edit-display').modal('hide');
@@ -112,14 +111,14 @@ class EditDisplay {
         });
       }
 
-      var modeConfig = {};
-      if(mode === 'twinkle') {
-        modeConfig = {seedColor: this.$el.find('#twinkle-seed-color').val() };
-      } else if(mode === 'solid-color') {
-        modeConfig = {color: this.$el.find('#solid-color').val() };
+      var macroConfig = {};
+      if(macro === 'twinkle') {
+        macroConfig = {seedColor: this.$el.find('#twinkle-seed-color').val() };
+      } else if(macro === 'solid-color') {
+        macroConfig = {color: this.$el.find('#solid-color').val() };
       }
 
-      new DisplayManager(this.displayKey).updateModeConfig(mode, modeConfig, () => {
+      new DisplayManager(this.displayKey).updateMacroConfig(macro, macroConfig, () => {
         saveDisplay.apply(this);
       });
     });
