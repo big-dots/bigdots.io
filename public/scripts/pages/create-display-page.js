@@ -2,7 +2,7 @@ import page from 'page';
 import DisplayManager from '../managers/display-manager';
 import Resource from '../lib/resource';
 
-class DisplayForm {
+class CreateDisplayPage {
   constructor($el) {
     this.$el = $el;
   }
@@ -125,4 +125,4 @@ function assembleMartix(width, height) {
   return matrix;
 }
 
-export { DisplayForm as default }
+export { CreateDisplayPage as default }

@@ -1,10 +1,9 @@
 import page from 'page';
 
-import Display from './pages/display';
-import DisplayForm from './pages/display-form';
-import DisplayList from './pages/display-list';
-import Home from './pages/home';
-import Macros from './pages/macros';
+import DisplayPage from './pages/display-page';
+import CreateDisplayPage from './pages/create-display-page';
+import HomePage from './pages/home-page';
+import InstallMacrosPage from './pages/install-macros-page';
 
 firebase.initializeApp({
   apiKey: "AIzaSyANob4DbCBvpUU1PJjq6p77qpTwsMrcJfI",
@@ -14,26 +13,22 @@ firebase.initializeApp({
 });
 
 page('/', function(ctx) {
-  new Home($('.page')).render();
-});
-
-page('/displays', function(ctx) {
-  new DisplayList($('.page')).render();
+  new HomePage($('.page')).render();
 });
 
 page('/displays/new', function(ctx) {
-  new DisplayForm($('.page')).render();
+  new CreateDisplayPage($('.page')).render();
   $('select').select2();
 });
 
 page('/displays/:id', function(ctx) {
-  new Display($('.page'), {
+  new DisplayPage($('.page'), {
     id: ctx.params.id
   }).render();
 });
 
-page('/macros', function(ctx) {
-  new Macros($('.page')).render();
+page('/install-macros', function(ctx) {
+  new InstallMacrosPage($('.page')).render();
 });
 
 page();

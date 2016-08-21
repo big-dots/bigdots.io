@@ -3,7 +3,7 @@ import MacroManager from '../managers/macro-manager';
 
 var macroManager = new MacroManager();
 
-class Macros {
+class InstallMacrosPage {
   constructor($el) {
     this.$el = $el;
   }
@@ -54,4 +54,4 @@ class Macros {
   }
 }
 
-export { Macros as default }
+export { InstallMacrosPage as default }

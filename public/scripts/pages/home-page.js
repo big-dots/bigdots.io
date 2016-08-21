@@ -1,4 +1,4 @@
-class Home {
+class HomePage {
   constructor($el) {
     this.$el = $el;
   }
@@ -20,4 +20,4 @@ class Home {
   }
 }
 
-export { Home as default }
+export { HomePage as default }

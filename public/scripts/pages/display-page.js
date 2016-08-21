@@ -3,7 +3,7 @@ import ConnectedHardware from '../components/connected-hardware';
 import EditDisplay from '../components/edit-display';
 import Resource from '../lib/resource';
 
-class Display {
+class DisplayPage {
   constructor($el, config) {
     this.id = config.id;
     this.$el = $el;
@@ -55,4 +55,4 @@ class Display {
   }
 }
 
-export { Display as default }
+export { DisplayPage as default }
