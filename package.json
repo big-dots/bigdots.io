@@ -14,6 +14,7 @@
     "babelify": "^7.3.0",
     "page": "^1.7.1",
     "watchify": "^3.7.0",
-    "display-coupler": "big-dots/display-coupler.git#v0.4.12"
+    "display-coupler": "big-dots/display-coupler.git#v0.4.12",
+    "macro-library": "big-dots/macro-library.git#v0.0.1"
   }
 }

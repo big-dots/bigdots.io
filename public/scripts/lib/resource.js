@@ -23,6 +23,10 @@ class Resource {
     return firebase.database().ref(`displays/${id}/macros/${mode}`);
   }
 
+  macros() {
+    return firebase.database().ref('macros');
+  }
+
   hardwares() {
     return firebase.database().ref('hardware');
   }

@@ -4,6 +4,7 @@ import Display from './pages/display';
 import DisplayForm from './pages/display-form';
 import DisplayList from './pages/display-list';
 import Home from './pages/home';
+import Macros from './pages/macros';
 
 firebase.initializeApp({
   apiKey: "AIzaSyANob4DbCBvpUU1PJjq6p77qpTwsMrcJfI",
@@ -29,6 +30,10 @@ page('/displays/:id', function(ctx) {
   new Display($('.page'), {
     id: ctx.params.id
   }).render();
+});
+
+page('/macros', function(ctx) {
+  new Macros($('.page')).render();
 });
 
 page();

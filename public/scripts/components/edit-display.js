@@ -1,5 +1,8 @@
 import page from 'page';
 import DisplayManager from '../managers/display-manager';
+import MacroManager from '../managers/macro-manager';
+
+var macroManager = new MacroManager();
 
 class EditDisplay {
   constructor($el, displayKey, displayData) {
@@ -10,7 +13,7 @@ class EditDisplay {
   render() {
     this.$el.html(`
       <a href="#" class="btn btn-link" data-toggle="modal" data-target="#edit-display">
-        <span class="display-macro">${this.displayData.activeMacro}</span>
+        <span class="display-macro">${this.displayData.macro}</span>
         <i class="fa fa-pencil"></i>
       </a>
       <div id="edit-display" class="modal fade">
@@ -27,21 +30,17 @@ class EditDisplay {
                 <div class="row">
                   <div class="col-xs-12 col-sm-6">
                     <fieldset class="form-group">
-                      <label for="display-macro">Select macro</label>
-                      <select name="display-macro" class="form-control" id="display-macro">
-                        <option value="programmable">Programmable</option>
-                        <option value="twinkle">Twinkle</option>
-                        <option value="solid-color">Solid color</option>
-                      </select>
+                      <label for="macro">Select macro</label>
+                      <select name="macro" class="form-control" id="macro"></select>
                     </fieldset>
                   </div>
                 </div>
-                <div class="programmable-options row" style="display: none;">
+                <div class="programmable options row" style="display: none;">
                   <div class="col-xs-12 col-sm-6">
                     <p>Warning you need programming skills to use this display macro. Learn more about this option <a href="#">here.</a>
                   </div>
                 </div>
-                <div class="twinkle-options row" style="display: none;">
+                <div class="twinkle options row" style="display: none;">
                   <div class="col-xs-12 col-sm-6">
                     <fieldset class="form-group">
                       <h5>Twinkle Options</h5>
@@ -51,7 +50,7 @@ class EditDisplay {
                     </fieldset>
                   </div>
                 </div>
-                <div class="solid-color-options row" style="display: none;">
+                <div class="solid-color options row" style="display: none;">
                   <div class="col-xs-12 col-sm-6">
                     <fieldset class="form-group">
                       <h5>Solid Color Options</h5>
@@ -68,15 +67,17 @@ class EditDisplay {
       </div>
     `);
 
+    this.populateMacros();
+
     this.$el.find('#edit-display').on('shown.bs.modal', function() {
       $('select').select2();
     });
 
-    var $twinkleOptions = this.$el.find('.twinkle-options'),
-        $programmableOptions = this.$el.find('.programmable-options'),
-        $solidColorOptions = this.$el.find('.solid-color-options');
+    var $twinkleOptions = this.$el.find('.options.twinkle'),
+        $programmableOptions = this.$el.find('.options.programmable'),
+        $solidColorOptions = this.$el.find('.options.solid-color');
 
-    this.$el.find('select#display-macro').change(function(el) {
+    this.$el.find('select#macro').change(function(el) {
       $twinkleOptions.hide();
       $programmableOptions.hide();
       $solidColorOptions.hide();
@@ -90,37 +91,41 @@ class EditDisplay {
       }
     });
 
-    this.$el.find('select#display-macro').val(this.displayData.activeMacro).change();
+    this.$el.find('select#macro').val(this.displayData.macro).change();
 
     this.$el.find('form').submit((ev) => {
       ev.preventDefault();
 
-      var macro = $('#display-macro').val();
+      var macro = $('select#macro').val();
 
-      function saveDisplay() {
-        var newData = { activeMacro: macro };
-
-        new DisplayManager(this.displayKey).update(newData, (displayKey) => {
-          this.$el.find('#edit-display').modal('hide');
-
-          // Why doesn't this happen automatically?!
-          $('body').removeClass('modal-open');
-          $('.modal-backdrop').remove();
-
-          page(`/displays/${this.displayKey}`);
-        });
-      }
-
-      var macroConfig = {};
+      var newData = { macro: macro };
       if(macro === 'twinkle') {
-        macroConfig = {seedColor: this.$el.find('#twinkle-seed-color').val() };
+        newData.macroConfig = {seedColor: this.$el.find('#twinkle-seed-color').val() };
       } else if(macro === 'solid-color') {
-        macroConfig = {color: this.$el.find('#solid-color').val() };
+        newData.macroConfig = {color: this.$el.find('#solid-color').val() };
       }
 
-      new DisplayManager(this.displayKey).updateMacroConfig(macro, macroConfig, () => {
-        saveDisplay.apply(this);
+      new DisplayManager(this.displayKey).update(newData, (displayKey) => {
+        this.$el.find('#edit-display').modal('hide');
+
+        // Why doesn't this happen automatically?!
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+
+        page(`/displays/${this.displayKey}`);
       });
+    });
+  }
+
+  populateMacros() {
+    var $macrosSelect = this.$el.find('select#macro');
+
+    macroManager.getInstalledMacros(function(macros) {
+      for(let key in macros) {
+        var name = macros[key].name;
+
+        $macrosSelect.append(`<option value=${key}>${name}</option>`);
+      }
     });
   }
 }

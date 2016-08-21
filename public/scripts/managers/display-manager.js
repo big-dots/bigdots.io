@@ -47,12 +47,6 @@ class DisplayManager {
       cb();
     });
   }
-
-  updateMacroConfig(macro, config, cb) {
-    new Resource().displayMacroConfig(this.displayKey, macro).update(config).then(function() {
-      cb();
-    });
-  }
 }
 
 export { DisplayManager as default }
