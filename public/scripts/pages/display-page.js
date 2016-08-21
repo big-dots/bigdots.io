@@ -1,7 +1,8 @@
-import SoftwareDisplay from '../components/software-display';
-import ConnectedHardware from '../components/connected-hardware';
-import EditDisplay from '../components/edit-display';
-import Resource from '../lib/resource';
+import Display from '../components/display';
+import ChangeMacroModal from '../modals/change-macro-modal';
+import DisplayManager from '../managers/display-manager';
+
+var displayManager = new DisplayManager();
 
 class DisplayPage {
   constructor($el, config) {
@@ -12,45 +13,34 @@ class DisplayPage {
   render() {
     this.$el.html(`
       <div class="frame" style="display: none;">
-      <div class="display-meta">
-        <div class="edit-display pull-right"></div>
-        <h4 class="display-name text-left"></h4>
-      </div>
-        <div class='matrix'></div>
         <div class="display-meta">
-          <div class="connected-hardware pull-right"></div>
+          <a href="#" class="btn btn-link pull-right change-macro" data-toggle="modal" data-target="#edit-display">
+            <span class="display-macro"></span>
+            <i class="fa fa-pencil"></i>
+          </a>
+          <h4 class="display-name text-left"></h4>
         </div>
+        <div class='matrix'></div>
+        <div class="change-macro-modal"></div>
       </div>
     `);
 
-    var softwareDisplay = new SoftwareDisplay(this.$el.find('.matrix'), this.id);
+    var display = new Display(this.$el.find('.matrix'), this.id);
 
-    var displayRef = new Resource().display(this.id);
-    displayRef.on('value', (snapshot) => {
-      var displayData = snapshot.val();
-
+    displayManager.getDisplay(this.id, (displayData) => {
       var dimensions = {
         width: displayData.width,
         height: displayData.height
       };
 
-      softwareDisplay.load($('.frame').width(), dimensions, () => {
+      display.load($('.frame').width(), dimensions, () => {
         this.$el.find('.display-name').text(displayData.name);
-        this.$el.find('.display-mode').text(displayData.mode);
+        this.$el.find('.display-macro').text(displayData.macro);
         this.$el.find('.frame').fadeIn();
       });
 
-
-      var hardwareKeys = [];
-      for(let key in displayData.connectedHardware) {
-        hardwareKeys.push(key);
-      }
-
-      var connectedHardware = new ConnectedHardware(this.$el.find('.connected-hardware'), hardwareKeys);
-      connectedHardware.render();
-
-      var editDisplay = new EditDisplay(this.$el.find('.edit-display'), this.id, displayData);
-      editDisplay.render();
+      var $modal = this.$el.find('.change-macro-modal');
+      new ChangeMacroModal($modal, this.id, displayData).render();
     });
   }
 }

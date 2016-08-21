@@ -46,69 +46,32 @@ class CreateDisplayPage {
                   </select>
                 </fieldset>
               </div>
-              <div class="col-xs-12">
-                <fieldset class="form-group">
-                  <label for="connect-hardware">Connect Hardware</label>
-                  <select class="form-control" id="connect-hardware" name="connect-hardware" multiple="multiple">
-                  </select>
-                </fieldset>
-              </div>
             </div>
-            <button type="submit" class="btn btn-success pull-right">Create Matrix</button>
+            <button type="submit" class="btn btn-success pull-right">Create Display</button>
           </form>
         </div>
       </div>
     `);
-
-    this.populateHardwareOptions();
 
     this.$el.find('form').submit((ev) => {
       ev.preventDefault();
 
       let displayName = $('#display-name').val(),
           displayWidth = parseInt($('#display-width').val(), 10),
-          displayHeight = parseInt($('#display-height').val(), 10),
-          requestedHardware = this.$el.find('select#connect-hardware').val();
+          displayHeight = parseInt($('#display-height').val(), 10);
 
-      var matrixData = assembleMartix(displayWidth, displayHeight),
-          connectedHardware = assembleHardware(requestedHardware);
+      var matrixData = assembleMartix(displayWidth, displayHeight);
 
       new DisplayManager().create(matrixData, {
         brightness: 100,
         name: displayName,
         width: displayWidth,
-        height: displayHeight,
-        connectedHardware: connectedHardware
+        height: displayHeight
       }, function(displayKey) {
         page(`/displays/${displayKey}`);
       });
     });
   }
-
-  populateHardwareOptions() {
-    var $hardwareSelect = this.$el.find('select#connect-hardware');
-
-    new Resource().hardwares().once('value').then((snapshot) => {
-      var hardwares = snapshot.val();
-
-      for(let key in hardwares) {
-        var width = hardwares[key].rows,
-            height = hardwares[key].columns * hardwares[key].chains;
-
-        $hardwareSelect.append(`<option value=${key}>${key} ${width}x${height}</option>`);
-      }
-    });
-  }
-}
-
-function assembleHardware(hardwareKeys) {
-  var hardware = {};
-
-  hardwareKeys.forEach(function(key) {
-    hardware[key] = true;
-  });
-
-  return hardware;
 }
 
 function assembleMartix(width, height) {

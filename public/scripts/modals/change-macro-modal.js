@@ -4,18 +4,15 @@ import MacroManager from '../managers/macro-manager';
 
 var macroManager = new MacroManager();
 
-class EditDisplay {
+class ChangeMacroModal {
   constructor($el, displayKey, displayData) {
     this.$el = $el;
     this.displayKey = displayKey;
     this.displayData = displayData;
   }
+
   render() {
     this.$el.html(`
-      <a href="#" class="btn btn-link" data-toggle="modal" data-target="#edit-display">
-        <span class="display-macro">${this.displayData.macro}</span>
-        <i class="fa fa-pencil"></i>
-      </a>
       <div id="edit-display" class="modal fade">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -28,7 +25,7 @@ class EditDisplay {
             <div class="modal-body">
               <form>
                 <div class="row">
-                  <div class="col-xs-12 col-sm-6">
+                  <div class="col-xs-12">
                     <fieldset class="form-group">
                       <label for="macro">Select macro</label>
                       <select name="macro" class="form-control" id="macro"></select>
@@ -36,26 +33,35 @@ class EditDisplay {
                   </div>
                 </div>
                 <div class="programmable options row" style="display: none;">
-                  <div class="col-xs-12 col-sm-6">
+                  <div class="col-xs-12">
+                    <p class="programmable description"></p>
                     <p>Warning you need programming skills to use this display macro. Learn more about this option <a href="#">here.</a>
                   </div>
                 </div>
                 <div class="twinkle options row" style="display: none;">
-                  <div class="col-xs-12 col-sm-6">
+                  <div class="col-xs-12">
+                    <p class="twinkle description"></p>
                     <fieldset class="form-group">
-                      <h5>Twinkle Options</h5>
+                      <h5>Macro options</h5>
                       <label for="twinkle-base-color">Seed Color</label>
-                      <input class="form-control" type="text" id="twinkle-seed-color" placeholder="#FFFFFF" />
+                      <div class="input-group colorpicker-component">
+                        <input type="text" id="twinkle-seed-color" value="#006e91" class="form-control" />
+                        <span class="input-group-addon"><i></i></span>
+                      </div>
                       <small class="text-muted">The brightest hex value you want to display</small>
                     </fieldset>
                   </div>
                 </div>
                 <div class="solid-color options row" style="display: none;">
-                  <div class="col-xs-12 col-sm-6">
+                  <div class="col-xs-12">
+                    <p class="solid-color description"></p>
                     <fieldset class="form-group">
-                      <h5>Solid Color Options</h5>
+                      <h5>Macro options</h5>
                       <label for="solid-color">Color</label>
-                      <input class="form-control" type="text" id="solid-color" placeholder="#6b005c" />
+                      <div class="input-group colorpicker-component">
+                        <input type="text" id="solid-color" value="#006e91" class="form-control" />
+                        <span class="input-group-addon"><i></i></span>
+                      </div>
                     </fieldset>
                   </div>
                 </div>
@@ -69,9 +75,15 @@ class EditDisplay {
 
     this.populateMacros();
 
-    this.$el.find('#edit-display').on('shown.bs.modal', function() {
+    this.$el.find('#edit-display').on('show.bs.modal', () => {
+      this.$el.find('select#macro').val(this.displayData.macro).change();
+    });
+
+    this.$el.find('#edit-display').on('shown.bs.modal', () => {
       $('select').select2();
     });
+
+    this.$el.find('.colorpicker-component').colorpicker();
 
     var $twinkleOptions = this.$el.find('.options.twinkle'),
         $programmableOptions = this.$el.find('.options.programmable'),
@@ -91,8 +103,6 @@ class EditDisplay {
       }
     });
 
-    this.$el.find('select#macro').val(this.displayData.macro).change();
-
     this.$el.find('form').submit((ev) => {
       ev.preventDefault();
 
@@ -105,7 +115,7 @@ class EditDisplay {
         newData.macroConfig = {color: this.$el.find('#solid-color').val() };
       }
 
-      new DisplayManager(this.displayKey).update(newData, (displayKey) => {
+      new DisplayManager().update(this.displayKey, newData, (displayKey) => {
         this.$el.find('#edit-display').modal('hide');
 
         // Why doesn't this happen automatically?!
@@ -119,15 +129,13 @@ class EditDisplay {
 
   populateMacros() {
     var $macrosSelect = this.$el.find('select#macro');
-
-    macroManager.getInstalledMacros(function(macros) {
+    macroManager.getInstalledMacros((macros) => {
       for(let key in macros) {
-        var name = macros[key].name;
-
-        $macrosSelect.append(`<option value=${key}>${name}</option>`);
+        $macrosSelect.append(`<option value=${key}>${macros[key].name}</option>`);
+        this.$el.find(`.description.${key}`).text(macros[key].description);
       }
     });
   }
 }
 
-export { EditDisplay as default }
+export { ChangeMacroModal as default }

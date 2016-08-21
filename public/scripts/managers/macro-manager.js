@@ -1,4 +1,5 @@
 import Resource from '../lib/resource';
+import MacroLibrary from 'macro-library';
 
 class MacroManager {
   install(key, config, cb) {
@@ -10,14 +11,16 @@ class MacroManager {
     });
   }
 
-  uninstall(identifier) {
-
-  }
-
   getInstalledMacros(callback) {
     new Resource().macros().once('value').then((snapshot) => {
       callback(snapshot.val());
     });
+  }
+
+  getAvailableMacros() {
+    var macroLibrary = new MacroLibrary();
+    macroLibrary.registerMacros();
+    return macroLibrary.availableMacros();
   }
 }
 
