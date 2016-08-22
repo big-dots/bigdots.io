@@ -13,17 +13,25 @@ class DisplayPage {
   render() {
     this.$el.html(`
       <div class="frame" style="display: none;">
-        <div class="display-meta">
+        <div class="display-meta" style="display: none;">
           <a href="#" class="btn btn-link pull-right change-macro" data-toggle="modal" data-target="#edit-display">
             <span class="display-macro"></span>
             <i class="fa fa-pencil"></i>
           </a>
-          <h4 class="display-name text-left"></h4>
+          <span class="display-name text-left"></span>
         </div>
         <div class='matrix'></div>
         <div class="change-macro-modal"></div>
       </div>
     `);
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.$el.find('.display-meta').show();
+      } else {
+        this.$el.find('.display-meta').hide();
+      }
+    });
 
     var display = new Display(this.$el.find('.matrix'), this.id);
 

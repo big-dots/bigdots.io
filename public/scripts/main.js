@@ -5,12 +5,16 @@ import CreateDisplayPage from './pages/create-display-page';
 import HomePage from './pages/home-page';
 import InstallMacrosPage from './pages/install-macros-page';
 
+import Header from './components/header';
+
 firebase.initializeApp({
   apiKey: "AIzaSyANob4DbCBvpUU1PJjq6p77qpTwsMrcJfI",
   authDomain: "led-fiesta.firebaseapp.com",
   databaseURL: "https://led-fiesta.firebaseio.com",
   storageBucket: "led-fiesta.appspot.com"
 });
+
+new Header($('.header')).render();
 
 page('/', function(ctx) {
   new HomePage($('.page')).render();
