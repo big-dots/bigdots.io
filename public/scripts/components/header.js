@@ -19,11 +19,17 @@ class Header {
     `);
 
     firebase.auth().onAuthStateChanged((user) => {
+      var $signedIn = this.$el.find('.user-signed-in'),
+          $signedOut = this.$el.find('.user-signed-out');
+          
       if(user) {
         this.$el.find('.avatar').attr('src', user.photoURL);
-        this.$el.find('.user-signed-in').show();
+        $signedOut.hide();
+        $signedIn.show();
       } else {
         this.$el.find('.user-signed-out').show();
+        $signedIn.hide();
+        $signedOut.show();
       }
     });
 
