@@ -18,10 +18,10 @@ class Header {
       </header>
     `);
 
+    var $signedIn = this.$el.find('.user-signed-in'),
+        $signedOut = this.$el.find('.user-signed-out');
+
     firebase.auth().onAuthStateChanged((user) => {
-      var $signedIn = this.$el.find('.user-signed-in'),
-          $signedOut = this.$el.find('.user-signed-out');
-          
       if(user) {
         this.$el.find('.avatar').attr('src', user.photoURL);
         $signedOut.hide();
@@ -38,8 +38,9 @@ class Header {
       var provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider).then((result) => {
         var user = result.user;
-        debugger
         this.$el.find('.avatar').attr('src', user.photoURL);
+        $signedOut.hide();
+        $signedIn.show();
       }).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
