@@ -4,6 +4,7 @@ import DisplayPage from './pages/display-page';
 import CreateDisplayPage from './pages/create-display-page';
 import HomePage from './pages/home-page';
 import InstallMacrosPage from './pages/install-macros-page';
+import HowToBuildADisplayPage from './pages/how-to-build-a-display-page';
 
 import Header from './components/header';
 
@@ -33,6 +34,10 @@ page('/displays/:id', function(ctx) {
 
 page('/install-macros', function(ctx) {
   new InstallMacrosPage($('.page')).render();
+});
+
+page('/how-to-build-a-display', function(ctx) {
+  new HowToBuildADisplayPage($('.page')).render();
 });
 
 page();
