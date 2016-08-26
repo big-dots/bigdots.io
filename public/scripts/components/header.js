@@ -1,3 +1,7 @@
+import UserManager from '../managers/user-manager';
+
+var userManager = new UserManager();
+
 class Header {
   constructor($el) {
     this.$el = $el;
@@ -5,7 +9,7 @@ class Header {
 
   render() {
     this.$el.html(`
-      <header class="navbar navbar-static-top navbar-dark bg-inverse">
+      <header class="navbar navbar-static-top navbar-dark bg-inverse" style="border-radius: 0;">
         <div class="pull-right">
           <div class="user-signed-in" style="display: none;">
             <img src="" class="avatar" style="border-radius: 20px; width: 40px; height: 40px;"/>
@@ -26,6 +30,17 @@ class Header {
         this.$el.find('.avatar').attr('src', user.photoURL);
         $signedOut.hide();
         $signedIn.show();
+
+        var identity = {
+          name: user.displayName,
+          profileImageUrl: user.photoURL,
+          uid: user.uid
+        };
+
+        userManager.updateIdentity(user.uid, identity, function() {
+          // Something...
+        });
+
       } else {
         this.$el.find('.user-signed-out').show();
         $signedIn.hide();

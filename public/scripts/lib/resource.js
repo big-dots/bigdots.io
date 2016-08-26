@@ -34,6 +34,10 @@ class Resource {
   hardware(id) {
     return firebase.database().ref(`hardware/${id}`);
   }
+
+  userIdentity(id) {
+    return firebase.database().ref(`users/public/${id}/identity`);
+  }
 }
 
 export { Resource as default }
