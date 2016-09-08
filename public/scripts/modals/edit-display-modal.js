@@ -2,6 +2,7 @@ import page from 'page';
 import Modal from './modal';
 import DisplayManager from '../managers/display-manager';
 import MacroManager from '../managers/macro-manager';
+import Typewriter from 'typewriter';
 
 var macroManager = new MacroManager(),
     displayManager = new DisplayManager();
@@ -120,6 +121,31 @@ class EditDisplayModal extends Modal {
                         </fieldset>
                       </div>
                     </div>
+                    <div class="text options row" style="display: none;">
+                      <div class="col-xs-12">
+                        <p class="text description"></p>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <h5>Macro options</h5>
+                            <div class="form-group">
+                              <label for="solid-color">Color</label>
+                              <div class="input-group colorpicker-component">
+                                <input type="text" id="text-color" value="#006e91" class="form-control" />
+                                <span class="input-group-addon"><i></i></span>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="text-value">Text</label>
+                              <input type="text" id="text-value" placeholder="What you want displayed..." class="form-control" />
+                            </div>
+                            <div class="form-group">
+                              <label for="text-font">Select font</label>
+                              <select class="form-control" id="text-fonts"></select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <br /><br />
@@ -133,6 +159,7 @@ class EditDisplayModal extends Modal {
 
     this.populateMacros();
     this.populateOwners();
+    this.populateFonts();
 
     this.$('#edit-display').on('show.bs.modal', () => {
       this.$('select#macro').val(this.displayData.macro).change();
@@ -152,12 +179,14 @@ class EditDisplayModal extends Modal {
 
     var $twinkleOptions = this.$('.options.twinkle'),
         $programmableOptions = this.$('.options.programmable'),
-        $solidColorOptions = this.$('.options.solid-color');
+        $solidColorOptions = this.$('.options.solid-color'),
+        $textOptions = this.$('.options.text');
 
     this.$('select#macro').change(function(el) {
       $twinkleOptions.hide();
       $programmableOptions.hide();
       $solidColorOptions.hide();
+      $textOptions.hide();
 
       if(this.value === 'twinkle') {
         $twinkleOptions.show();
@@ -165,6 +194,8 @@ class EditDisplayModal extends Modal {
         $programmableOptions.show();
       } else if(this.value == 'solid-color') {
         $solidColorOptions.show();
+      } else if(this.value == 'text') {
+        $textOptions.show();
       }
     });
 
@@ -177,9 +208,19 @@ class EditDisplayModal extends Modal {
       };
 
       if(newData.macro === 'twinkle') {
-        newData.macroConfig = {seedColor: this.$('#twinkle-seed-color').val() };
-      } else if(macro === 'solid-color') {
-        newData.macroConfig = {color: this.$('#solid-color').val() };
+        newData.macroConfig = {
+          seedColor: this.$('#twinkle-seed-color').val()
+        };
+      } else if(newData.macro === 'solid-color') {
+        newData.macroConfig = {
+          color: this.$('#solid-color').val()
+        };
+      } else if(newData.macro === 'text') {
+        newData.macroConfig = {
+          color: this.$('#text-color').val(),
+          text: this.$('#text-value').val().toUpperCase(),
+          font: this.$('#text-fonts').val()
+        }
       }
 
       displayManager.update(this.displayKey, newData, (displayKey) => {
@@ -201,6 +242,13 @@ class EditDisplayModal extends Modal {
         $macrosSelect.append(`<option value=${key}>${macros[key].name}</option>`);
         this.$(`.description.${key}`).text(macros[key].description);
       }
+    });
+  }
+
+  populateFonts() {
+    var $fontsSelect = this.$('select#text-fonts');
+    Typewriter.availableFonts().forEach((font) => {
+      $fontsSelect.append(`<option value=${font}>${font}</option>`);
     });
   }
 
