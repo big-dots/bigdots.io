@@ -1,8 +1,6 @@
-class HowToBuildADisplayPage {
-  constructor($el) {
-    this.$el = $el;
-  }
+import Page from './page';
 
+class HowToBuildADisplayPage extends Page {
   render() {
     this.$el.html(`
       <div class="container-fluid">

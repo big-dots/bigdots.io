@@ -1,22 +1,28 @@
+import Display from '../components/display';
+
 class HomePage {
-  constructor($el) {
-    this.$el = $el;
+  constructor() {
+      this.$el = $('')
   }
 
   render() {
     this.$el.html(`
-      <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-          <h1 class="display-3">Hello, world!</h1>
-          <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-          <hr class="m-y-2">
-          <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-          <p class="lead">
-            <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-          </p>
+      <header class="navbar navbar-static-top navbar-dark logged-out" style="border-radius: 0;">
+        <div class="pull-right">
+          <a href="#" class="btn btn-secondary sign-in">Sign in</a>
         </div>
-      </div>
+        <a class="navbar-brand" href="/">BIGDOTS</a>
+        <div class="demo">
+          <div class="matrix" style="width: 650px; margin: auto;"></div>
+          <p style="font-size: 30px; margin: 30px 0;">A programmable LED display for... anything!</p>
+        </div>
+      </header>
     `);
+
+    var display = new Display(this.$el.find('.matrix'), '-KQBqz3I3aSMgWvPQKxz');
+    display.load(650, { width: 128, height: 32 }, () => {
+      // Something...
+    });
   }
 }
 

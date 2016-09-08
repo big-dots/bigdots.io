@@ -6,8 +6,12 @@
     "public": "public",
     "rewrites": [
       {
+        "source": "/",
+        "destination": "/logged-out.html"
+      },
+      {
         "source": "**",
-        "destination": "/index.html"
+        "destination": "/logged-in.html"
       }
     ]
   }

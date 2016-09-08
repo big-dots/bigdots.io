@@ -1,12 +1,9 @@
+import Page from 'page';
 import page from 'page';
 import DisplayManager from '../managers/display-manager';
 import Resource from '../lib/resource';
 
-class CreateDisplayPage {
-  constructor($el) {
-    this.$el = $el;
-  }
-
+class CreateDisplayPage extends Page {
   render() {
     this.$el.html(`
       <h1>
@@ -60,14 +57,15 @@ class CreateDisplayPage {
           displayWidth = parseInt($('#display-width').val(), 10),
           displayHeight = parseInt($('#display-height').val(), 10);
 
-      var matrixData = assembleMartix(displayWidth, displayHeight);
+      var matrixData = assembleMartix(displayWidth, displayHeight),
+          uid = firebase.auth().currentUser.uid;
 
       new DisplayManager().create(matrixData, {
         brightness: 100,
         name: displayName,
         width: displayWidth,
         height: displayHeight
-      }, function(displayKey) {
+      }, uid, function(displayKey) {
         page(`/displays/${displayKey}`);
       });
     });

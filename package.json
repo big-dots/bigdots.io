@@ -12,9 +12,22 @@
   "dependencies": {
     "babel-preset-es2015": "^6.9.0",
     "babelify": "^7.3.0",
+    "connect": "^3.4.1",
+    "display-coupler": "bigdots-io/display-coupler.git#v0.9.0",
+    "event-stream": "^3.3.4",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^2.0.0",
+    "gulp-watch": "^4.3.9",
+    "macro-library": "bigdots-io/macro-library.git#v0.5.0",
     "page": "^1.7.1",
-    "watchify": "^3.7.0",
-    "display-coupler": "bigdots-io/display-coupler.git#v0.8.2",
-    "macro-library": "bigdots-io/macro-library.git#v0.4.2"
+    "serve-static": "^1.11.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.14.0"
   }
 }

@@ -3,6 +3,7 @@ import page from 'page';
 import DisplayPage from './pages/display-page';
 import CreateDisplayPage from './pages/create-display-page';
 import HomePage from './pages/home-page';
+import DashboardPage from './pages/dashboard-page';
 import InstallMacrosPage from './pages/install-macros-page';
 import HowToBuildADisplayPage from './pages/how-to-build-a-display-page';
 
@@ -15,29 +16,32 @@ firebase.initializeApp({
   storageBucket: "led-fiesta.appspot.com"
 });
 
-new Header($('.header')).render();
-
-page('/', function(ctx) {
-  new HomePage($('.page')).render();
+page('/my/dashboard', function() {
+  new DashboardPage().render();
 });
 
-page('/displays/new', function(ctx) {
-  new CreateDisplayPage($('.page')).render();
+page('/displays/new', function() {
+  new CreateDisplayPage().render();
   $('select').select2();
 });
 
 page('/displays/:id', function(ctx) {
-  new DisplayPage($('.page'), {
+  new DisplayPage({
     id: ctx.params.id
   }).render();
 });
 
-page('/install-macros', function(ctx) {
-  new InstallMacrosPage($('.page')).render();
+page('/install-macros', function() {
+  new InstallMacrosPage().render();
 });
 
-page('/how-to-build-a-display', function(ctx) {
-  new HowToBuildADisplayPage($('.page')).render();
+page('/how-to-build-a-display', function() {
+  new HowToBuildADisplayPage().render();
 });
 
-page();
+firebase.auth().onAuthStateChanged(function(user) {
+  if(user) {
+    new Header($('.header')).render();
+    page();
+  }
+});

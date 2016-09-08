@@ -23,8 +23,37 @@ class Display {
     callback();
   }
 
+  demo(macro, macroConfig, width, dimensions, callback) {
+    var displayConfig = {
+      macro: macro,
+      macroConfig: macroConfig,
+      width: dimensions.width,
+      height: dimensions.height
+    };
+    
+    this.render(width, dimensions);
+
+    var displayCoupler = new DisplayCoupler();
+    displayCoupler.demo(displayConfig, {
+      onReady: function(displayData, next) {
+        next()
+      },
+      onPixelChange: (y, x, hex, displayData) => {
+        displayData = displayData || {};
+        this.refreshPixelByCoordinates(y, x, hex, displayData);
+      }
+    });
+    callback();
+  }
+
   render(width, dimensions) {
-    this.$el.html('');
+    this.$el.html(`
+      <div class="display">
+        <div class="top"></div>
+        <div class="right"></div>
+        <div class="front"></div>
+      </div>
+    `);
 
     var adjustedBrightness = (50 + (100 / 2)) / 100,
         size = (width - 20) / dimensions.width;
@@ -38,7 +67,7 @@ class Display {
           </span>
         `);
       }
-      this.$el.append($row);
+      this.$el.find('.front').append($row);
     }
   }
 

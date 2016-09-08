@@ -1,11 +1,16 @@
 import page from 'page';
+import Modal from './modal';
 import DisplayManager from '../managers/display-manager';
 
-class ApiUsageModal {
+class ApiUsageModal extends Modal {
   constructor($el, displayKey, displayData) {
-    this.$el = $el;
+    super($el);
     this.displayKey = displayKey;
     this.displayData = displayData;
+  }
+
+  $(selector) {
+    return this.$el.find(selector);
   }
 
   render() {
@@ -20,6 +25,9 @@ class ApiUsageModal {
               <h4 class="modal-title">Using the API</h4>
             </div>
             <div class="modal-body">
+              <p class="alert alert-danger">
+                Treat <strong>${this.displayData.matrix}</strong> like an <strong>API SECRET</strong>. Whoever possesses it can write to this LED board.
+              </p>
               <h5>Updating one point</h5>
               <p>To update a specific point on your Display, replace <strong>Y</strong> and <strong>X</strong> with the coordinate to update</p>
               <pre>

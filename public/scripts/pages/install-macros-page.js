@@ -1,12 +1,9 @@
 import MacroManager from '../managers/macro-manager';
+import Page from './page';
 
 var macroManager = new MacroManager();
 
-class InstallMacrosPage {
-  constructor($el) {
-    this.$el = $el;
-  }
-
+class InstallMacrosPage extends Page {
   render() {
     this.$el.html(`
       <h1>Macros</h1>

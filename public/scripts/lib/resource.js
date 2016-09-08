@@ -23,6 +23,10 @@ class Resource {
     return firebase.database().ref(`displays/${id}/macros/${mode}`);
   }
 
+  displayOwners(id) {
+    return firebase.database().ref(`displays/${id}/owners`);
+  }
+
   macros() {
     return firebase.database().ref('macros');
   }
@@ -37,6 +41,9 @@ class Resource {
 
   userIdentity(id) {
     return firebase.database().ref(`users/public/${id}/identity`);
+  }
+  userDisplays(id) {
+    return firebase.database().ref(`users/private/${id}/displays`);
   }
 }
 

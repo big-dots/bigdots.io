@@ -1,6 +1,8 @@
 import UserManager from '../managers/user-manager';
+import DisplayManager from '../managers/display-manager';
 
-var userManager = new UserManager();
+var userManager = new UserManager(),
+    displayManager = new DisplayManager();
 
 class Header {
   constructor($el) {
@@ -9,24 +11,17 @@ class Header {
 
   render() {
     this.$el.html(`
-      <header class="navbar navbar-static-top navbar-dark bg-inverse" style="border-radius: 0;">
+      <header class="navbar navbar-static-top" style="border-radius: 0;">
         <div class="pull-right">
-          <div class="user-signed-in" style="display: none;">
-            <img src="" class="avatar" style="border-radius: 20px; width: 40px; height: 40px;"/>
-          </div>
-          <div class="user-signed-out" style="display: none;">
-            <a href="#" class="btn btn-secondary sign-in">Sign in</a>
-          </div>
+          <img src="" class="avatar" style="border-radius: 20px; width: 40px; height: 40px;"/>
         </div>
         <a class="navbar-brand" href="/">BIGDOTS</a>
       </header>
     `);
 
-    var $signedIn = this.$el.find('.user-signed-in'),
-        $signedOut = this.$el.find('.user-signed-out');
-
     firebase.auth().onAuthStateChanged((user) => {
       if(user) {
+        this.$el.find('header').removeClass('logged-out');
         this.$el.find('.avatar').attr('src', user.photoURL);
         $signedOut.hide();
         $signedIn.show();
@@ -42,6 +37,7 @@ class Header {
         });
 
       } else {
+        this.$el.find('header').addClass('logged-out');
         this.$el.find('.user-signed-out').show();
         $signedIn.hide();
         $signedOut.show();
