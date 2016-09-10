@@ -30,7 +30,7 @@ class Display {
       width: dimensions.width,
       height: dimensions.height
     };
-    
+
     this.render(width, dimensions);
 
     var displayCoupler = new DisplayCoupler();

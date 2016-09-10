@@ -22,7 +22,6 @@ page('/my/dashboard', function() {
 
 page('/displays/new', function() {
   new CreateDisplayPage().render();
-  $('select').select2();
 });
 
 page('/displays/:id', function(ctx) {

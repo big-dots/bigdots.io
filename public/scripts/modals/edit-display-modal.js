@@ -142,6 +142,36 @@ class EditDisplayModal extends Modal {
                               <label for="text-font">Select font</label>
                               <select class="form-control" id="text-fonts"></select>
                             </div>
+                            <div class="form-group">
+                              <label for="text-speed">Marquee speed</label>
+                              <select class="form-control" id="text-marquee-speed" name="speed">
+                                <option value="1">1</option>
+                                <option value="10">10</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="250">250</option>
+                                <option value="500">500</option>
+                              </select>
+                              <p class="form-text text-muted">
+                                The speed the text is scrolling, in milliseconds
+                              </p>
+                            </div>
+                            <div class="form-group">
+                              <label for="text-speed">Marquee initial delay</label>
+                              <select class="form-control" id="text-marquee-initial-delay">
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                                <option value="500">500</option>
+                                <option value="1000">1000</option>
+                                <option value="2000">2000</option>
+                                <option value="3000">3000</option>
+                                <option value="4000">4000</option>
+                                <option value="5000">5000</option>
+                              </select>
+                              <p class="form-text text-muted">
+                                The delay before the text starts scrolling, in milliseconds
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -167,13 +197,6 @@ class EditDisplayModal extends Modal {
       this.$('select#display-height').val(this.displayData.height).change();
     });
     this.$('#display-name').val(this.displayData.name)
-
-    this.$('#edit-display').on('shown.bs.modal', () => {
-      $('select').select2();
-    });
-    this.$('a[data-toggle="tab"]').on('shown.bs.tab', () => {
-      $('select').select2();
-    });
 
     this.$('.colorpicker-component').colorpicker();
 
@@ -219,7 +242,9 @@ class EditDisplayModal extends Modal {
         newData.macroConfig = {
           color: this.$('#text-color').val(),
           text: this.$('#text-value').val().toUpperCase(),
-          font: this.$('#text-fonts').val()
+          font: this.$('#text-fonts').val(),
+          marqueeSpeed: this.$('#text-marquee-speed').val(),
+          marqueeInitialDelay: this.$('#text-marquee-initial-delay').val()
         }
       }
 
