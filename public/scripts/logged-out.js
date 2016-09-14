@@ -7,7 +7,6 @@ firebase.initializeApp({
   storageBucket: "led-fiesta.appspot.com"
 });
 
-
 var display = new Display($('#display'), '-KQBqz3I3aSMgWvPQKxz');
 
 display.demo('twinkle', {seedColor: '#FFFFFF'}, $('.demo').width(), { width: 128, height: 32 }, () => {
