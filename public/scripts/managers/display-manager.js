@@ -6,6 +6,11 @@ class DisplayManager {
         displayKey = firebase.database().ref('displays').push().key;
 
     new Resource().matrix(matrixKey).set(matrix).then(function() {
+
+      config.matrix = matrixKey;
+      config.owners = {}
+      config.owners[uid] = true;
+      
       new Resource().display(displayKey).set(config).then(function() {
         var data = {};
         data[displayKey] = true;

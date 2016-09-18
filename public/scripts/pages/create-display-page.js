@@ -1,4 +1,4 @@
-import Page from 'page';
+import Page from './page';
 import page from 'page';
 import DisplayManager from '../managers/display-manager';
 import Resource from '../lib/resource';

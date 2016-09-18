@@ -121,6 +121,45 @@ class EditDisplayModal extends Modal {
                         </fieldset>
                       </div>
                     </div>
+                    <div class="marquee options row" style="display: none;">
+                      <div class="col-xs-12">
+                        <p class="marquee description"></p>
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <h5>Macro options</h5>
+                            <div class="form-group">
+                              <label for="solid-color">Color</label>
+                              <div class="input-group colorpicker-component">
+                                <input type="text" id="marquee-color" value="#006e91" class="form-control" />
+                                <span class="input-group-addon"><i></i></span>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="marquee-value">Text</label>
+                              <input type="text" id="marquee-value" placeholder="What you want displayed..." class="form-control" />
+                            </div>
+                            <div class="form-group">
+                              <label for="marquee-font">Select font</label>
+                              <select class="form-control fonts" id="marquee-fonts"></select>
+                            </div>
+                            <div class="form-group">
+                              <label for="marquee-speed">Marquee speed</label>
+                              <select class="form-control" id="marquee-speed" name="speed">
+                                <option value="1">1</option>
+                                <option value="10">10</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="250">250</option>
+                                <option value="500">500</option>
+                              </select>
+                              <p class="form-text text-muted">
+                                The speed the text is scrolling, in milliseconds
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <div class="text options row" style="display: none;">
                       <div class="col-xs-12">
                         <p class="text description"></p>
@@ -140,37 +179,7 @@ class EditDisplayModal extends Modal {
                             </div>
                             <div class="form-group">
                               <label for="text-font">Select font</label>
-                              <select class="form-control" id="text-fonts"></select>
-                            </div>
-                            <div class="form-group">
-                              <label for="text-speed">Marquee speed</label>
-                              <select class="form-control" id="text-marquee-speed" name="speed">
-                                <option value="1">1</option>
-                                <option value="10">10</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
-                              </select>
-                              <p class="form-text text-muted">
-                                The speed the text is scrolling, in milliseconds
-                              </p>
-                            </div>
-                            <div class="form-group">
-                              <label for="text-speed">Marquee initial delay</label>
-                              <select class="form-control" id="text-marquee-initial-delay">
-                                <option value="100">100</option>
-                                <option value="200">200</option>
-                                <option value="500">500</option>
-                                <option value="1000">1000</option>
-                                <option value="2000">2000</option>
-                                <option value="3000">3000</option>
-                                <option value="4000">4000</option>
-                                <option value="5000">5000</option>
-                              </select>
-                              <p class="form-text text-muted">
-                                The delay before the text starts scrolling, in milliseconds
-                              </p>
+                              <select class="form-control fonts" id="text-fonts"></select>
                             </div>
                           </div>
                         </div>
@@ -203,12 +212,14 @@ class EditDisplayModal extends Modal {
     var $twinkleOptions = this.$('.options.twinkle'),
         $programmableOptions = this.$('.options.programmable'),
         $solidColorOptions = this.$('.options.solid-color'),
+        $marqueeOptions = this.$('.options.marquee'),
         $textOptions = this.$('.options.text');
 
     this.$('select#macro').change(function(el) {
       $twinkleOptions.hide();
       $programmableOptions.hide();
       $solidColorOptions.hide();
+      $marqueeOptions.hide();
       $textOptions.hide();
 
       if(this.value === 'twinkle') {
@@ -219,6 +230,8 @@ class EditDisplayModal extends Modal {
         $solidColorOptions.show();
       } else if(this.value == 'text') {
         $textOptions.show();
+      } else if(this.value == 'marquee') {
+        $marqueeOptions.show();
       }
     });
 
@@ -242,9 +255,14 @@ class EditDisplayModal extends Modal {
         newData.macroConfig = {
           color: this.$('#text-color').val(),
           text: this.$('#text-value').val().toUpperCase(),
-          font: this.$('#text-fonts').val(),
-          marqueeSpeed: this.$('#text-marquee-speed').val(),
-          marqueeInitialDelay: this.$('#text-marquee-initial-delay').val()
+          font: this.$('#text-fonts').val()
+        }
+      } else if(newData.macro === 'marquee') {
+        newData.macroConfig = {
+          color: this.$('#marquee-color').val(),
+          text: this.$('#marquee-value').val().toUpperCase(),
+          font: this.$('#marquee-fonts').val(),
+          marqueeSpeed: this.$('#marquee-speed').val()
         }
       }
 
@@ -271,7 +289,7 @@ class EditDisplayModal extends Modal {
   }
 
   populateFonts() {
-    var $fontsSelect = this.$('select#text-fonts');
+    var $fontsSelect = this.$('select.fonts');
     Typewriter.availableFonts().forEach((font) => {
       $fontsSelect.append(`<option value=${font}>${font}</option>`);
     });
