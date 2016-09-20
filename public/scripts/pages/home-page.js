@@ -1,4 +1,5 @@
-import Display from '../components/display';
+import DisplayCoupler from 'display-coupler';
+import DotMatrix from 'dot-matrix';
 
 class HomePage {
   constructor() {
@@ -19,9 +20,21 @@ class HomePage {
       </header>
     `);
 
-    var display = new Display(this.$el.find('.matrix'), '-KQBqz3I3aSMgWvPQKxz');
-    display.load(650, { width: 128, height: 32 }, () => {
-      // Something...
+    var dotMatrix = new DotMatrix(this.$('.matrix'));
+
+    var key = '-KQBqz3I3aSMgWvPQKxz';
+    displayManager.getDisplay(key, (displayData) => {
+      dotMatrix.render(650, { width: 128, height: 32 });
+
+      var displayCoupler = new DisplayCoupler(firebase.database());
+      displayCoupler.connect(key, {
+        onReady: function(displayData, next) {
+          next()
+        },
+        onPixelChange: (y, x, hex) => {
+          dotMatrix.updateDot(y, x, hex);
+        }
+      });
     });
   }
 }

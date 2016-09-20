@@ -1,4 +1,5 @@
-import Display from './components/display';
+import DisplayCoupler from 'display-coupler';
+import DotMatrix from 'dot-matrix';
 
 firebase.initializeApp({
   apiKey: "AIzaSyANob4DbCBvpUU1PJjq6p77qpTwsMrcJfI",
@@ -7,9 +8,21 @@ firebase.initializeApp({
   storageBucket: "led-fiesta.appspot.com"
 });
 
+var dotMatrix = new DotMatrix($('#display'));
+dotMatrix.render(650, { width: 128, height: 32 });
 
-var display = new Display($('#display'), '-KQBqz3I3aSMgWvPQKxz');
-
-display.demo('twinkle', {seedColor: '#FFFFFF'}, $('.demo').width(), { width: 128, height: 32 }, () => {
-  // Something...
+var displayConfig = {
+    macro: 'twinkle',
+    macroConfig: {seedColor: '#FFFFFF'},
+    width: 128,
+    height: 32
+  };
+var displayCoupler = new DisplayCoupler();
+displayCoupler.demo(displayConfig, {
+  onReady: function(displayData, next) {
+    next()
+  },
+  onPixelChange: (y, x, hex) => {
+    dotMatrix.updateDot(y, x, hex);
+  }
 });

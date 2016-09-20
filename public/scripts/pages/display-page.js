@@ -1,4 +1,5 @@
-import Display from '../components/display';
+import DisplayCoupler from 'display-coupler';
+import DotMatrix from 'dot-matrix';
 import Page from './page';
 import EditDisplayModal from '../modals/edit-display-modal';
 import ApiUsageModal from '../modals/api-usage-modal';
@@ -41,19 +42,27 @@ class DisplayPage extends Page {
       }
     });
 
-    var display = new Display(this.$('.matrix-container'), this.id);
+    var dotMatrix = new DotMatrix(this.$('.matrix-container'));
 
     displayManager.getDisplay(this.id, (displayData) => {
-      var dimensions = {
+      dotMatrix.render($('.frame').width(), {
         width: displayData.width,
         height: displayData.height
-      };
-
-      display.load($('.frame').width(), dimensions, () => {
-        this.$('.display-name').text(displayData.name);
-        this.$('.display-macro').text(displayData.macro);
-        this.$('.frame').fadeIn();
       });
+
+      var displayCoupler = new DisplayCoupler(firebase.database());
+      displayCoupler.connect(this.id, {
+        onReady: function(displayData, next) {
+          next()
+        },
+        onPixelChange: (y, x, hex) => {
+          dotMatrix.updateDot(y, x, hex);
+        }
+      });
+
+      this.$('.display-name').text(displayData.name);
+      this.$('.display-macro').text(displayData.macro);
+      this.$('.frame').fadeIn();
 
       var $editDisplayModal = this.$('.edit-display-modal');
       new EditDisplayModal($editDisplayModal, this.id, displayData).render();
