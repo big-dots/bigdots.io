@@ -4,7 +4,6 @@
   "description": "",
   "main": "bundle.js",
   "scripts": {
-    "start": "./node_modules/.bin/watchify -t [ babelify --presets [es2015] ] public/scripts/main.js -o public/scripts/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,7 +13,6 @@
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
     "connect": "^3.4.1",
-    "display-coupler": "bigdots-io/display-coupler.git#v0.11.0",
     "event-stream": "^3.3.4",
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
@@ -22,17 +20,13 @@
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.9",
-<<<<<<< HEAD
     "display-coupler": "bigdots-io/display-coupler.git#v0.14.1",
     "macro-library": "bigdots-io/macro-library.git#v0.10.1",
+    "macro-form": "bigdots-io/macro-form.git#v0.1.0",
     "typewriter": "bigdots-io/typewriter.git#v0.5.4",
     "dot-matrix": "bigdots-io/dot-matrix.git#v0.1.0",
-=======
-    "macro-library": "bigdots-io/macro-library.git#v0.7.0",
->>>>>>> ecb93c4aa6420c0d147f9a7ed1f470545a3eb742
     "page": "^1.7.1",
     "serve-static": "^1.11.1",
-    "typewriter": "bigdots-io/typewriter.git#v0.2.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
