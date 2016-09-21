@@ -3,4 +3,5 @@ node_modules
 firebase-debug.log
 npm-debug.log
 
-public/scripts/bundle.js
+public/scripts/dist/logged-in.bundle.js
+public/scripts/dist/logged-out.bundle.js
