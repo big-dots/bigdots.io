@@ -47,7 +47,7 @@ class DisplayDemoPage extends Page {
               Marquee
             </li>
             <li class="list-group-item">
-              <a href="#" data-macro="counter" data-macro-config='{"icon": "heart"}' class="demo btn pull-right">Enable</a>
+              <a href="#" data-macro="counter" data-macro-config='{"icon": "heart", "url": "https://bigdots-b46cc.firebaseapp.com/counter-example.json"}' class="demo btn pull-right">Enable</a>
               Counter
             </li>
           </ul>
