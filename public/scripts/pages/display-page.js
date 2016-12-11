@@ -53,7 +53,11 @@ class DisplayPage extends Page {
         height: displayData.height
       });
 
-      var displayCoupler = new DisplayCoupler(firebase.database());
+      var displayCoupler = new DisplayCoupler(firebase.database(), {
+        width: displayData.width,
+        height: displayData.height
+      });
+      
       displayCoupler.connect(this.id, {
         onPixelChange: (y, x, hex) => {
           dotMatrix.updateDot(y, x, hex);
@@ -61,7 +65,6 @@ class DisplayPage extends Page {
       });
 
       this.$('.display-name').text(displayData.name);
-      this.$('.display-macro').text(displayData.macro);
       this.$('.frame').fadeIn();
     });
   }

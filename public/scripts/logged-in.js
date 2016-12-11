@@ -1,28 +1,27 @@
 import page from 'page';
 
 import DisplayPage from './pages/display-page';
+import DisplayDemoPage from './pages/display-demo';
 import CreateDisplayPage from './pages/create-display-page';
 import HomePage from './pages/home-page';
 import DashboardPage from './pages/dashboard-page';
-import InstallMacrosPage from './pages/install-macros-page';
-import HowToBuildADisplayPage from './pages/how-to-build-a-display-page';
+import Instructions from './pages/instructions';
 
 import Header from './components/header';
 
 firebase.initializeApp({
-  apiKey: "AIzaSyANob4DbCBvpUU1PJjq6p77qpTwsMrcJfI",
-  authDomain: "led-fiesta.firebaseapp.com",
-  databaseURL: "https://led-fiesta.firebaseio.com",
-  storageBucket: "led-fiesta.appspot.com"
+  apiKey: "AIzaSyC8C93oYUP3Pt_0GlXZ85EO5aozVGpsngA",
+  authDomain: "bigdots-b46cc.firebaseapp.com",
+  databaseURL: "https://bigdots-b46cc.firebaseio.com"
 });
 
-page('/my/dashboard', function() {
-  new DashboardPage().render();
-});
-
-page('/displays/new', function() {
-  new CreateDisplayPage().render();
-});
+// page('/my/dashboard', function() {
+//   new DashboardPage().render();
+// });
+//
+// page('/displays/new', function() {
+//   new CreateDisplayPage().render();
+// });
 
 page('/displays/:id', function(ctx) {
   new DisplayPage({
@@ -30,17 +29,22 @@ page('/displays/:id', function(ctx) {
   }).render();
 });
 
-page('/install-macros', function() {
-  new InstallMacrosPage().render();
+page('/displays/:id/demo', function(ctx) {
+  new DisplayDemoPage({
+    id: ctx.params.id
+  }).render();
 });
 
-page('/how-to-build-a-display', function() {
-  new HowToBuildADisplayPage().render();
+page('/instructions', function() {
+  new Instructions().render();
 });
 
-firebase.auth().onAuthStateChanged(function(user) {
-  if(user) {
-    new Header($('.header')).render();
-    page();
-  }
-});
+new Header($('.header')).render();
+page();
+
+// firebase.auth().onAuthStateChanged(function(user) {
+//   // debugger
+//   // if(user) {
+//
+//   // }
+// });

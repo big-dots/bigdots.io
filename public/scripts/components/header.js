@@ -12,7 +12,7 @@ class Header {
   render() {
     this.$el.html(`
       <header class="navbar navbar-static-top" style="border-radius: 0;">
-        <div class="pull-right">
+        <div class="pull-right hidden-xl-down">
           <img src="" class="avatar" style="border-radius: 20px; width: 40px; height: 40px;"/>
         </div>
         <a class="navbar-brand" href="/">BIGDOTS</a>
@@ -23,8 +23,6 @@ class Header {
       if(user) {
         this.$el.find('header').removeClass('logged-out');
         this.$el.find('.avatar').attr('src', user.photoURL);
-        $signedOut.hide();
-        $signedIn.show();
 
         var identity = {
           name: user.displayName,
@@ -39,8 +37,6 @@ class Header {
       } else {
         this.$el.find('header').addClass('logged-out');
         this.$el.find('.user-signed-out').show();
-        $signedIn.hide();
-        $signedOut.show();
       }
     });
 
@@ -50,8 +46,6 @@ class Header {
       firebase.auth().signInWithPopup(provider).then((result) => {
         var user = result.user;
         this.$el.find('.avatar').attr('src', user.photoURL);
-        $signedOut.hide();
-        $signedIn.show();
       }).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
