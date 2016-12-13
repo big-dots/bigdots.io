@@ -31,8 +31,20 @@ class DisplayDemoPage extends Page {
               Text (default)
             </li>
             <li class="list-group-item">
-              <a href="#" data-macro="text" data-macro-config='{"text": "Longer messages work just fine too", "color": "#ffff00"}' class="demo btn pull-right">Enable</a>
+              <a href="#" data-macro="text" data-macro-config='{"text": "RIGHT", "alignment": "right"}' class="demo btn pull-right">Enable</a>
+              Text right
+            </li>
+            <li class="list-group-item">
+              <a href="#" data-macro="text" data-macro-config='{"text": "CENTER", "alignment": "center"}' class="demo btn pull-right">Enable</a>
+              Text center
+            </li>
+            <li class="list-group-item">
+              <a href="#" data-macro="text" data-macro-config='{"text": "LONGER MESSAGES WORK JUST FINE TOO", "color": "#ffff00"}' class="demo btn pull-right">Enable</a>
               Text Stylized
+            </li>
+            <li class="list-group-item">
+              <a href="#" data-macro="text" data-macro-config='{"text": "bigger font! HEEEEY", "font": "system-16", "color": "#ffff00"}' class="demo btn pull-right">Enable</a>
+              Text font
             </li>
             <li class="list-group-item">
               <a href="#" data-macro="image" data-macro-config='{"url": "https://www.comedyfestival.co.nz/assets/Uploads/2016/Flags/_resampled/FillWyI2NCIsIjMyIl0-british-flag-small.jpg"}' class="demo btn pull-right">Enable</a>
@@ -47,7 +59,7 @@ class DisplayDemoPage extends Page {
               Marquee
             </li>
             <li class="list-group-item">
-              <a href="#" data-macro="counter" data-macro-config='{"icon": "heart", "url": "https://bigdots-b46cc.firebaseapp.com/demo/counter-example.json"}' class="demo btn pull-right">Enable</a>
+              <a href="#" data-macro="counter" data-macro-config='{"icon": "heart", "url": "/demo/counter-example.json"}' class="demo btn pull-right">Enable</a>
               Counter
             </li>
           </ul>
