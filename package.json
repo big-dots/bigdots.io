@@ -20,7 +20,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.9",
-    "display-coupler": "bigdots-io/display-coupler.git#v0.26.5",
+    "display-coupler": "bigdots-io/display-coupler.git#v0.26.6",
     "dot-matrix": "bigdots-io/dot-matrix.git#v0.1.0",
     "page": "^1.7.1",
     "serve-static": "^1.11.1",
